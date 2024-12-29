@@ -9,17 +9,17 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.util.regex.Pattern;
 
-public class LoginPanel {
+public class RejestracjaPanel {
     @FXML
     private TextField mailTextField;
     @FXML
     private TextField hasloTextField;
     @FXML
-    private Button zalogujButton;
-    @FXML
-    private Button anulujButton;
+    private TextField potwierdzonehasloTextField;
     @FXML
     private Button zarejestrujButton;
+    @FXML
+    private Button anulujButton;
 
     private MainApp mainApp;
 
@@ -33,6 +33,7 @@ public class LoginPanel {
         Pattern pattern = Pattern.compile(emailRegex);
         return pattern.matcher(email).matches();
     }
+
     public boolean IsPasswordValid(String password) {
         // Sprawdzenie poprawności hasła -> co najmniej 8 liter: małych i dużych, znaków specjalnych lub liter
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$";
@@ -40,9 +41,10 @@ public class LoginPanel {
         return pattern.matcher(password).matches();
     }
 
-    public void onZalogujButton(){
+    public void onZarejestrujButton() {
         String mail = mailTextField.getText();
         String haslo = hasloTextField.getText();
+        String potwierdzonehaslo = potwierdzonehasloTextField.getText();
 
         if (!IsEmailValid(mail)) {
             System.out.println("Niepoprawny mail. Proszę spróbować ponownie.");
@@ -52,37 +54,23 @@ public class LoginPanel {
             System.out.println("Niepoprawne hasło. Proszę spróbować ponownie.");
             return;
         }
+        if(!haslo.equals(potwierdzonehaslo)) {
+            System.out.println("Błąd! Proszę spróbować napisać hasło ponownie.");
+            return;
+        }
         System.out.println("Poprawne logowanie użytkownika: " + mail);
 
-        // Przejście do głównego panelu
         goToMainAppScreen();
     }
-    public void onZarejestrujButton(){
-        Stage stage = (Stage) zarejestrujButton.getScene().getWindow();
-        goToRegisterScreen();
-    }
 
-    public void onAnulujButton(){
+    public void onAnulujButton() {
         Stage stage = (Stage) anulujButton.getScene().getWindow();
         stage.close();
     }
+
     public void goToMainAppScreen() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/mainapp.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) zalogujButton.getScene().getWindow();
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void goToRegisterScreen() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/rejestracja-panel.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) zarejestrujButton.getScene().getWindow();
@@ -94,5 +82,4 @@ public class LoginPanel {
             e.printStackTrace();
         }
     }
-
 }

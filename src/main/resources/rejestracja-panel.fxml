@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="center" spacing="10" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.playlistmanager.RejestracjaPanel">
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+    <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #FF5733;" text="Witamy w Miska Music!" />
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Rejestracja" />
+
+    <GridPane alignment="center" hgap="10" vgap="10">
+        <Label text="E-Mail:" />
+        <TextField fx:id="mailTextField" GridPane.columnIndex="1" />
+
+        <Label text="Hasło:" GridPane.rowIndex="1" />
+        <TextField fx:id="hasloTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label text="Potwierdź hasło:" GridPane.rowIndex="2" />
+      <TextField fx:id="potwierdzonehasloTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    <columnConstraints>
+        <ColumnConstraints />
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+         <RowConstraints />
+    </rowConstraints>
+    </GridPane>
+
+    <HBox alignment="center" spacing="10">
+        <Button fx:id="zarejestrujButton" onAction="#onZarejestrujButton" text="Zarejestruj" />
+        <Button fx:id="anulujButton" onAction="#onAnulujButton" text="Anuluj" />
+    </HBox>
+
+    <opaqueInsets>
+    <Insets top="20.0" />
+    </opaqueInsets>
+        </VBox>

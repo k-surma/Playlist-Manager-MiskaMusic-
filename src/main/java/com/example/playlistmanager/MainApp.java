@@ -20,6 +20,7 @@ public class MainApp extends Application {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/login-panel.fxml"));
         Parent root = loader.load();
+
         LoginPanel controller = loader.getController();
         controller.setMainApp(this);
 

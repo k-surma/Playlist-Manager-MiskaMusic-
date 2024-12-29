@@ -8,7 +8,7 @@
     <padding>
         <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
-    <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #FF5733;" text="Witamy w MiskaMusic!" />
+    <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #FF5733;" text="Witamy w Miska Music!" />
     <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Proszę się zalogować:" />
 
     <GridPane alignment="center" hgap="10" vgap="10">
@@ -31,6 +31,15 @@
         <Button fx:id="zalogujButton" onAction="#onZalogujButton" text="Zaloguj" />
         <Button fx:id="anulujButton" onAction="#onAnulujButton" text="Anuluj" />
     </HBox>
+   <HBox prefHeight="0.0" prefWidth="262.0">
+      <children>
+         <Button fx:id="zarejestrujButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onZarejestrujButton" text="Zarejestruj nowego użytkownika" textAlignment="CENTER">
+            <HBox.margin>
+               <Insets left="35.0" />
+            </HBox.margin>
+         </Button>
+      </children>
+   </HBox>
 
       <opaqueInsets>
          <Insets top="20.0" />
