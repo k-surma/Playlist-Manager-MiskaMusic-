@@ -1,4 +1,4 @@
-package com.example.playlistmanager;
+package com.example.playlistmanager.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.util.regex.Pattern;
 
-public class LoginPanel {
+public class LoginPanel extends BaseController {
     @FXML
     private TextField mailTextField;
     @FXML
@@ -21,37 +21,33 @@ public class LoginPanel {
     @FXML
     private Button zarejestrujButton;
 
-    private MainApp mainApp;
-
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
-
-    public boolean IsEmailValid(String email) {
-        // Sprawdzenie poprawności e-mailu
-        String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        return pattern.matcher(email).matches();
-    }
-    public boolean IsPasswordValid(String password) {
-        // Sprawdzenie poprawności hasła -> co najmniej 8 liter: małych i dużych, znaków specjalnych lub liter
-        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$";
-        Pattern pattern = Pattern.compile(passwordRegex);
-        return pattern.matcher(password).matches();
-    }
+//    public boolean IsEmailValid(String email) {
+//        // Sprawdzenie poprawności e-mailu
+//        String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+//        Pattern pattern = Pattern.compile(emailRegex);
+//        return pattern.matcher(email).matches();
+//    }
+//    public boolean IsPasswordValid(String password) {
+//        // Sprawdzenie poprawności hasła -> co najmniej 8 liter: małych i dużych, znaków specjalnych lub liter
+//        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$";
+//        Pattern pattern = Pattern.compile(passwordRegex);
+//        return pattern.matcher(password).matches();
+//    }
 
     public void onZalogujButton(){
         String mail = mailTextField.getText();
         String haslo = hasloTextField.getText();
 
-        if (!IsEmailValid(mail)) {
+        if (!ValidationUtils.isEmailValid(mail)) {
             System.out.println("Niepoprawny mail. Proszę spróbować ponownie.");
             return;
         }
-        if (!IsPasswordValid(haslo)) {
+
+        if (!ValidationUtils.isPasswordValid(haslo)) {
             System.out.println("Niepoprawne hasło. Proszę spróbować ponownie.");
             return;
         }
+
         System.out.println("Poprawne logowanie użytkownika: " + mail);
 
         // Przejście do głównego panelu
@@ -62,24 +58,14 @@ public class LoginPanel {
         goToRegisterScreen();
     }
 
-    public void onAnulujButton(){
-        Stage stage = (Stage) anulujButton.getScene().getWindow();
-        stage.close();
+    public void onAnulujButton() {
+        closeStage((Stage) anulujButton.getScene().getWindow());
     }
+
     public void goToMainAppScreen() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mainapp.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) zalogujButton.getScene().getWindow();
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        navigateToScreen((Stage) zalogujButton.getScene().getWindow(), "/mainapp.fxml");
     }
+
     public void goToRegisterScreen() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/rejestracja-panel.fxml"));

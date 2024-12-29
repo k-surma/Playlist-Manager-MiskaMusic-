@@ -1,5 +1,6 @@
 package com.example.playlistmanager;
 
+import com.example.playlistmanager.controllers.MainApp;
 import javafx.application.Application;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
