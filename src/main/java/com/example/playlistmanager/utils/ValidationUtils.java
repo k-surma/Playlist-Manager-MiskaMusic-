@@ -1,4 +1,4 @@
-package com.example.playlistmanager.controllers;
+package com.example.playlistmanager.utils;
 
 import java.util.regex.Pattern;
 

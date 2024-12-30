@@ -1,15 +1,17 @@
 package com.example.playlistmanager.controllers;
 
+import com.example.playlistmanager.service.UserService;
+import com.example.playlistmanager.utils.ValidationUtils;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import java.util.regex.Pattern;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
-public class RejestracjaPanel extends BaseController{
+
+@Controller
+public class RejestracjaPanel extends BaseController {
     @FXML
     private TextField mailTextField;
     @FXML
@@ -21,20 +23,8 @@ public class RejestracjaPanel extends BaseController{
     @FXML
     private Button anulujButton;
 
-
-//    public boolean IsEmailValid(String email) {
-//        // Sprawdzenie poprawności e-mailu
-//        String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-//        Pattern pattern = Pattern.compile(emailRegex);
-//        return pattern.matcher(email).matches();
-//    }
-//
-//    public boolean IsPasswordValid(String password) {
-//        // Sprawdzenie poprawności hasła -> co najmniej 8 liter: małych i dużych, znaków specjalnych lub liter
-//        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$";
-//        Pattern pattern = Pattern.compile(passwordRegex);
-//        return pattern.matcher(password).matches();
-//    }
+    @Autowired
+    private UserService userService;
 
     public void onZarejestrujButton() {
         String mail = mailTextField.getText();
@@ -42,29 +32,35 @@ public class RejestracjaPanel extends BaseController{
         String potwierdzonehaslo = potwierdzonehasloTextField.getText();
 
         if (!ValidationUtils.isEmailValid(mail)) {
-            System.out.println("Niepoprawny mail. Proszę spróbować ponownie.");
+            System.out.println("Nieprawidłowy format emaila");
             return;
         }
 
         if (!ValidationUtils.isPasswordValid(haslo)) {
-            System.out.println("Niepoprawne hasło. Proszę spróbować ponownie.");
+            System.out.println("Hasło nie spełnia wymagań");
             return;
         }
 
-        if(!haslo.equals(potwierdzonehaslo)) {
-            System.out.println("Błąd! Proszę spróbować napisać hasło ponownie.");
+        if (!haslo.equals(potwierdzonehaslo)) {
+            System.out.println("Hasła nie są identyczne");
             return;
         }
-        System.out.println("Poprawne logowanie użytkownika: " + mail);
 
-        goToMainAppScreen();
+        try {
+            userService.registerUser(mail, haslo);
+            System.out.println("Zarejestrowano pomyślnie");
+            goToMainAppScreen();
+        } catch (Exception e) {
+            System.out.println("Błąd rejestracji: " + e.getMessage());
+        }
     }
 
     public void onAnulujButton() {
-        closeStage((Stage) anulujButton.getScene().getWindow());
+        Stage stage = (Stage) anulujButton.getScene().getWindow();
+        closeStage(stage); // Close the current window
     }
 
     public void goToMainAppScreen() {
-        navigateToScreen((Stage) zarejestrujButton.getScene().getWindow(), "/mainapp.fxml");
+        getMainApp().changeScene((Stage) zarejestrujButton.getScene().getWindow(), "/mainapp.fxml");
     }
 }

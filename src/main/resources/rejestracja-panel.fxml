@@ -17,17 +17,19 @@
 
         <Label text="Hasło:" GridPane.rowIndex="1" />
         <TextField fx:id="hasloTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Label text="Potwierdź hasło:" GridPane.rowIndex="2" />
-      <TextField fx:id="potwierdzonehasloTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-    <columnConstraints>
-        <ColumnConstraints />
-        <ColumnConstraints />
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints />
-        <RowConstraints />
-         <RowConstraints />
-    </rowConstraints>
+
+        <Label text="Potwierdź hasło:" GridPane.rowIndex="2" />
+        <TextField fx:id="potwierdzonehasloTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
     </GridPane>
 
     <HBox alignment="center" spacing="10">
@@ -36,6 +38,6 @@
     </HBox>
 
     <opaqueInsets>
-    <Insets top="20.0" />
+        <Insets top="20.0" />
     </opaqueInsets>
-        </VBox>
+</VBox>

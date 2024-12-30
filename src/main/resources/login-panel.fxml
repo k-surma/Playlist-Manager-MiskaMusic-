@@ -17,31 +17,33 @@
 
         <Label text="Hasło:" GridPane.rowIndex="1" />
         <TextField fx:id="hasloTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <columnConstraints>
-         <ColumnConstraints />
-         <ColumnConstraints />
-      </columnConstraints>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
     </GridPane>
 
     <HBox alignment="center" spacing="10">
         <Button fx:id="zalogujButton" onAction="#onZalogujButton" text="Zaloguj" />
         <Button fx:id="anulujButton" onAction="#onAnulujButton" text="Anuluj" />
     </HBox>
-   <HBox prefHeight="0.0" prefWidth="262.0">
-      <children>
-         <Button fx:id="zarejestrujButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onZarejestrujButton" text="Zarejestruj nowego użytkownika" textAlignment="CENTER">
-            <HBox.margin>
-               <Insets left="35.0" />
-            </HBox.margin>
-         </Button>
-      </children>
-   </HBox>
 
-      <opaqueInsets>
-         <Insets top="20.0" />
-      </opaqueInsets>
+    <HBox prefHeight="0.0" prefWidth="262.0">
+        <children>
+            <Button fx:id="zarejestrujButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onZarejestrujButton" text="Zarejestruj nowego użytkownika" textAlignment="CENTER">
+                <HBox.margin>
+                    <Insets left="35.0" />
+                </HBox.margin>
+            </Button>
+        </children>
+    </HBox>
+
+    <opaqueInsets>
+        <Insets top="20.0" />
+    </opaqueInsets>
 </VBox>

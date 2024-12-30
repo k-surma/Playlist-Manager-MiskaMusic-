@@ -1,36 +1,36 @@
 package com.example.playlistmanager.controllers;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Component;
 
-public class MainApp extends Application {
+@Component
+public class MainApp extends BaseController {
+    private ConfigurableApplicationContext springContext;
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        //Button btn = new Button("Hello, Playlist Manager!");
-        //btn.setOnAction(e -> System.out.println("Button clicked!"));
-
-        //StackPane root = new StackPane();
-        //root.getChildren().add(btn);
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/login-panel.fxml"));
-        Parent root = loader.load();
-
-        LoginPanel controller = loader.getController();
-        controller.setMainApp(this);
-
-        //Scene scene = new Scene(root, 800, 600);
-        Scene scene = new Scene(root);
-        stage.setTitle("Playlist Manager");
-        stage.setScene(scene);
-        stage.show();
+    public ConfigurableApplicationContext getSpringContext() {
+        return springContext;
     }
 
+    public void setSpringContext(ConfigurableApplicationContext context) {
+        this.springContext = context;
+    }
 
-    public static void main(String[] args) {
-        launch(args);
+    public void changeScene(Stage stage, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            loader.setControllerFactory(springContext::getBean);
+            Parent root = loader.load();
+
+            BaseController controller = loader.getController();
+            controller.setMainApp(this);
+
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
