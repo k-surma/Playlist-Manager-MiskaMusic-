@@ -1,5 +1,5 @@
 package com.example.playlistmanager.controllers;
-
+//klasa bazowa dla wszystkich kontrolerów
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,15 +22,15 @@ public abstract class BaseController {
             stage.close();
         }
     }
-
+    //przełącza widok na nowy plik FXML, obsługując Spring Dependency Injection (DI), by wstrzyknąć odpowiednie kontrolery
     protected void navigateToScreen(Stage stage, String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            loader.setControllerFactory(mainApp.getSpringContext()::getBean); // Ensure Spring DI
+            loader.setControllerFactory(mainApp.getSpringContext()::getBean); // zapewnia DI
             Parent root = loader.load();
 
             BaseController controller = loader.getController();
-            controller.setMainApp(mainApp); // Pass MainApp to the controller
+            controller.setMainApp(mainApp); // przekazywanie dostępu do MainApp do kontrolera, co pozwala na zarządzanie widokami
 
             Scene scene = new Scene(root);
             stage.setScene(scene);

@@ -23,7 +23,7 @@ public class RejestracjaPanel extends BaseController {
     @FXML
     private Button anulujButton;
 
-    @Autowired
+    @Autowired  //informuje springa o koniecznosci wstrzykniecia zaleznosci
     private UserService userService;
 
     public void onZarejestrujButton() {

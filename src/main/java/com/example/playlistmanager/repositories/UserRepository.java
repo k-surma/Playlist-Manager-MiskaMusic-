@@ -1,5 +1,5 @@
 package com.example.playlistmanager.repositories;
-
+//klasa odpowiedzialna za operacje na bazie danych users.db
 import com.example.playlistmanager.models.User;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
@@ -7,7 +7,7 @@ import java.sql.*;
 @Repository
 public class UserRepository {
     private static final String DB_URL = "jdbc:sqlite:users.db";
-
+    //tworzy bazę danych jeśli jeszcze nie istnieje
     public void initializeDatabase() {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             String sql = """
@@ -23,7 +23,7 @@ public class UserRepository {
             throw new RuntimeException("Failed to initialize database", e);
         }
     }
-
+    //zapisuje nowego użtkownika w bazie users
     public void save(User user) {
         String sql = "INSERT INTO users (email, password) VALUES (?, ?)";
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -35,7 +35,7 @@ public class UserRepository {
             throw new RuntimeException("Failed to save user", e);
         }
     }
-
+    //wyszukiwanie w bazie danych po emailu usera
     public User findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL);
