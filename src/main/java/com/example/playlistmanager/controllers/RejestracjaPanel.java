@@ -61,6 +61,6 @@ public class RejestracjaPanel extends BaseController {
     }
 
     public void goToMainAppScreen() {
-        getMainApp().changeScene((Stage) zarejestrujButton.getScene().getWindow(), "/mainapp.fxml");
+        getMainApp().changeScene((Stage) zarejestrujButton.getScene().getWindow(), "/main-panel.fxml");
     }
 }

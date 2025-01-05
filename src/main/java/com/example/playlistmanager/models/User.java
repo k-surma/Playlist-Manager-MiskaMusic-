@@ -6,6 +6,7 @@ public class User {
     private Long id;
     private String email;
     private String password;
+    private String name;
 
     // Constructors
     public User() {}
@@ -22,4 +23,5 @@ public class User {
     public void setEmail(String email) { this.email = email; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    public String getName() { return name; }
 }
