@@ -80,7 +80,7 @@
    <top>
       <VBox prefHeight="53.0" prefWidth="648.0" styleClass="menu-bar1" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="menu-bar1" text="Miska Music" textAlignment="CENTER" textFill="DARKSLATEBLUE">
+            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="menu-bar1" text="MiśkaMusic" textAlignment="CENTER" textFill="DARKSLATEBLUE">
                <font>
                   <Font name="Comic Sans MS Bold Italic" size="25.0" />
                </font>
