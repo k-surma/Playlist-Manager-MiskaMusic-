@@ -18,28 +18,40 @@ public class PlaylistService {
     @Autowired
     private SongRepository songRepository;
 
-    public void initializeDatabase() {
+    @Autowired
+    public PlaylistService(PlaylistRepository playlistRepository, SongRepository songRepository) {
+        this.playlistRepository = playlistRepository;
+        this.songRepository = songRepository;
+
+        // Inicjalizuje bazę danych przy uruchomieniu serwisu
         playlistRepository.initializeDatabase();
     }
 
-    public void createPLaylist(Playlist playlist) {
-        playlistRepository.save(playlist); //zapisuje nowa playliste dla konkretnego uzytkownika
-        songRepository.initializeDatabase(playlist.getName()); //inicjalizuje <playlist_name>.db
+
+    public void createPlaylist(Playlist playlist) {
+        playlistRepository.save(playlist); // Zapisuje playlistę w playlists.db
+        songRepository.initializeDatabase(playlist.getName()); // Inicjalizuje bazę danych dla playlisty
+        System.out.println("Zainicjalizowano bazę danych dla playlisty: " + playlist.getName());
     }
 
+
+
     public List<Playlist> getPlaylistsForUser(int userId) {
-        // pobiera playlisty danego usera
-        return playlistRepository.findByUserId(userId);
+        return playlistRepository.findByUserId(userId); // Retrieve playlists for the user
     }
 
     public void deletePlaylist(int playlistId, String playlistName) {
-        playlistRepository.delete(playlistId);  // usuwa z playlists.db
-        // Delete the corresponding <playlist_name>.db file
+        playlistRepository.delete(playlistId); // Remove from playlists.db
         File playlistFile = new File(playlistName + ".db");
         if (playlistFile.exists() && playlistFile.isFile()) {
             if (!playlistFile.delete()) {
-                throw new RuntimeException("Failed to delete playlist database file: " + playlistFile.getAbsolutePath());
+                System.err.println("Failed to delete playlist database file: " + playlistFile.getAbsolutePath());
             }
+        } else {
+            System.err.println("Playlist file not found: " + playlistFile.getAbsolutePath());
         }
     }
+
+
+
 }

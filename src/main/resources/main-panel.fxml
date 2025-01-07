@@ -18,11 +18,8 @@
                <image>
                   <Image url="@user-icon.png" />
                </image>
-               <viewport>
-                  <Rectangle2D width="135.0" />
-               </viewport>
             </ImageView>
-            <TextField fx:id="emailTextField" editable="false" prefHeight="25.0" prefWidth="140.0">
+            <TextField fx:id="emailTextField" editable="false" promptText="E-mail użytkownika" prefHeight="25.0" prefWidth="140.0">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" top="20.0" />
                </VBox.margin>
@@ -30,37 +27,49 @@
                   <Font name="Comic Sans MS" size="12.0" />
                </font>
             </TextField>
-            <Button fx:id="dodajplaylisteButton" mnemonicParsing="false" text="Dodaj playlistę" textAlignment="CENTER" textFill="DARKSLATEBLUE">
+            <Button fx:id="dodajplaylisteButton" mnemonicParsing="false" text="Dodaj playlistę" textAlignment="CENTER" textFill="DARKSLATEBLUE" onAction="#onDodajPlaylisteButton">
                <font>
                   <Font name="Comic Sans MS Bold" size="12.0" />
                </font>
                <cursor>
-                  <Cursor fx:constant="DEFAULT" />
+                  <Cursor fx:constant="HAND" />
                </cursor>
                <VBox.margin>
                   <Insets left="25.0" top="10.0" />
-               </VBox.margin></Button>
-            <Button fx:id="usunplaylisteButton" mnemonicParsing="false" text="Usuń playlistę" textAlignment="CENTER" textFill="DARKSLATEBLUE">
+               </VBox.margin>
+            </Button>
+            <Button fx:id="usunplaylisteButton" mnemonicParsing="false" text="Usuń playlistę" textAlignment="CENTER" textFill="DARKSLATEBLUE" onAction="#onUsunPlaylisteButton">
                <VBox.margin>
                   <Insets left="28.0" top="10.0" />
                </VBox.margin>
                <font>
                   <Font name="Comic Sans MS Bold" size="12.0" />
-               </font></Button>
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
             <Button fx:id="dodajpiosenkebazaButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="145.0" text="Dodaj piosenkę do bazy" textFill="DARKSLATEBLUE">
                <VBox.margin>
                   <Insets left="5.0" top="10.0" />
                </VBox.margin>
-                <font>
-                    <Font name="Comic Sans MS Bold" size="11.0" />
-                </font></Button>
+               <font>
+                  <Font name="Comic Sans MS Bold" size="11.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
             <Button fx:id="udostepnijButton" mnemonicParsing="false" text="Udostępnij playlistę" textFill="DARKSLATEBLUE">
                <VBox.margin>
                   <Insets left="14.0" top="10.0" />
                </VBox.margin>
-                <font>
-                    <Font name="Comic Sans MS Bold" size="12.0" />
-                </font>
+               <font>
+                  <Font name="Comic Sans MS Bold" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
             <Button fx:id="wylogujButton" mnemonicParsing="false" onAction="#onWylogujButton" text="Wyloguj" textFill="DARKSLATEBLUE">
                <font>
@@ -69,11 +78,15 @@
                <VBox.margin>
                   <Insets left="45.0" top="10.0" />
                </VBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Button>
             <Label alignment="CENTER" styleClass="label-stylish" text="„ Muzyka jest rodzajem magii, która działa bez wyjaśnień.” - Elton John " textAlignment="CENTER" wrapText="true">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" top="5.0" />
-               </VBox.margin></Label>
+               </VBox.margin>
+            </Label>
          </children>
       </VBox>
    </left>
@@ -90,25 +103,26 @@
             </Label>
             <Separator prefWidth="200.0" />
             <MenuBar styleClass="menu-bar1">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
+               <menus>
+                  <Menu mnemonicParsing="false" text="File">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Edit">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                     </items>
+                  </Menu>
+               </menus>
             </MenuBar>
-         </children></VBox>
+         </children>
+      </VBox>
    </top>
    <center>
       <VBox prefHeight="340.0" prefWidth="179.0" BorderPane.alignment="CENTER">
@@ -123,7 +137,7 @@
                         <Insets top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="nameTextField" editable="false" maxHeight="25.0" maxWidth="130.0">
+                  <TextField fx:id="nameTextField" editable="false" promptText="Imię użytkownika" maxHeight="25.0" maxWidth="130.0">
                      <HBox.margin>
                         <Insets left="2.0" top="2.5" />
                      </HBox.margin>
@@ -140,7 +154,7 @@
                         <Insets left="35.0" top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <ComboBox fx:id="playlistyComboBox" prefWidth="150.0">
+                  <ComboBox fx:id="playlistyComboBox" promptText="Wybierz playlistę" prefWidth="150.0">
                      <VBox.margin>
                         <Insets left="15.0" top="10.0" />
                      </VBox.margin>
@@ -177,33 +191,35 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </ListView>
-                  <ScrollBar orientation="VERTICAL">
-                     <HBox.margin>
-                        <Insets left="286.0" />
-                     </HBox.margin>
-                  </ScrollBar>
                </children>
             </HBox>
             <HBox prefHeight="41.0" prefWidth="301.0">
                <children>
-                  <Button fx:id="dodajpiosenkeplaylistaButton" mnemonicParsing="false" text="Dodaj piosenkę" textFill="DARKSLATEBLUE">
+                  <Button fx:id="dodajpiosenkeplaylistaButton" mnemonicParsing="false" text="Dodaj piosenkę" textFill="DARKSLATEBLUE" onAction="#onDodajPiosenkePlaylistaButton">
                      <font>
                         <Font name="Comic Sans MS Bold" size="12.0" />
                      </font>
                      <HBox.margin>
                         <Insets left="40.0" top="5.0" />
                      </HBox.margin>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </Button>
-                  <Button fx:id="usunpiosenkezplaylistyButton" mnemonicParsing="false" text="Usuń piosenkę" textFill="DARKSLATEBLUE">
+                  <Button fx:id="usunpiosenkezplaylistyButton" mnemonicParsing="false" text="Usuń piosenkę" textFill="DARKSLATEBLUE" onAction="#onUsunPiosenkeZPlaylistyButton">
                      <font>
                         <Font name="Comic Sans MS Bold" size="12.0" />
                      </font>
                      <HBox.margin>
                         <Insets left="30.0" top="5.0" />
                      </HBox.margin>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </Button>
                </children>
             </HBox>
-         </children></VBox>
+         </children>
+      </VBox>
    </right>
 </BorderPane>

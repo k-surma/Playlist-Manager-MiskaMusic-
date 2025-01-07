@@ -1,5 +1,5 @@
 package com.example.playlistmanager.service;
-//logika biznesowa aplikacji (powiązanie z kontrolerami)
+
 import com.example.playlistmanager.models.User;
 import com.example.playlistmanager.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -8,24 +8,46 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-    //wstrzykuje UserRepository i inicjalizuje bazę danych
+    private Long loggedInUserId; // ID of the currently logged-in user
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
         this.userRepository.initializeDatabase();
     }
 
-    //sprawdza czy użytkownik już istnieje i dodaje nowego użytkownika
-    public void registerUser(String email, String password) {
+    public void registerUser(String email, String password, String name) {
+        if (email == null || email.isBlank() || password == null || password.isBlank() || name == null || name.isBlank()) {
+            throw new RuntimeException("Email, password, and name must not be empty.");
+        }
         if (userRepository.findByEmail(email) != null) {
-            throw new RuntimeException("User already exists");
+            throw new RuntimeException("User already exists.");
         }
         User user = new User(email, password);
+        user.setName(name); // Set the name
         userRepository.save(user);
     }
 
-    //weryfikacja poprawnosci danych (czy uzytkownik o danym emailu istnieje i haslo sie zgadza)
     public boolean authenticateUser(String email, String password) {
         User user = userRepository.findByEmail(email);
-        return user != null && user.getPassword().equals(password);
+        if (user != null && user.getPassword().equals(password)) {
+            loggedInUserId = user.getId(); // Set the logged-in user ID
+            return true;
+        }
+        return false;
+    }
+
+    public Long getLoggedInUserId() {
+        if (loggedInUserId == null) {
+            throw new RuntimeException("No user is currently logged in.");
+        }
+        return loggedInUserId;
+    }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public void logout() {
+        loggedInUserId = null; // Clear the logged-in user ID
     }
 }

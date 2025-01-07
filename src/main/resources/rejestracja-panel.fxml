@@ -12,20 +12,24 @@
     <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Rejestracja" />
 
     <GridPane alignment="center" hgap="10" vgap="10">
-        <Label text="E-Mail:" />
-        <TextField fx:id="mailTextField" GridPane.columnIndex="1" />
+        <Label text="Imię:" />
+        <TextField fx:id="nameTextField" promptText="Podaj swoje imię" GridPane.columnIndex="1" />
 
-        <Label text="Hasło:" GridPane.rowIndex="1" />
-        <TextField fx:id="hasloTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label text="E-Mail:" GridPane.rowIndex="1" />
+        <TextField fx:id="mailTextField" promptText="Podaj swój e-mail" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label text="Potwierdź hasło:" GridPane.rowIndex="2" />
-        <TextField fx:id="potwierdzonehasloTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label text="Hasło:" GridPane.rowIndex="2" />
+        <PasswordField fx:id="hasloTextField" promptText="Podaj hasło" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label text="Potwierdź hasło:" GridPane.rowIndex="3" />
+        <PasswordField fx:id="potwierdzonehasloTextField" promptText="Potwierdź hasło" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
         <columnConstraints>
             <ColumnConstraints />
             <ColumnConstraints />
         </columnConstraints>
         <rowConstraints>
+            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
