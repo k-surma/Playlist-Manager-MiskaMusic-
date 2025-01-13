@@ -44,7 +44,7 @@ public class LoginPanel extends BaseController {
             }
 
             if (userService.authenticateUser(mail, haslo)) {
-                System.out.println("Udało się zalogować pomyślnie");
+                System.out.println("Zalogowano pomyślnie.");
                 goToMainAppScreen();
             } else {
                 throw new AuthenticationFailedException();
@@ -55,10 +55,8 @@ public class LoginPanel extends BaseController {
             showErrorDialog("Nieprawidłowe hasło. Upewnij się, że spełnia wymagania.");
         } catch (AuthenticationFailedException e) {
             showErrorDialog("Nieprawidłowe dane logowania.");
-        //} catch (LoginException e) {
-        //    showErrorDialog("Wystąpił problem z logowaniem: " + e.getMessage());
-        //} catch (Exception e) {
-        //    showErrorDialog("Nieoczekiwany błąd: " + e.getMessage());
+        } catch (Exception e) {
+            showErrorDialog("Nieoczekiwany błąd: " + e.getMessage());
         }
     }
 

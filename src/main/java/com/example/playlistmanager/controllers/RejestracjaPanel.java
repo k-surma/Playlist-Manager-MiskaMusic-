@@ -1,10 +1,10 @@
 package com.example.playlistmanager.controllers;
 
+import com.example.playlistmanager.exceptions.*;
 import com.example.playlistmanager.service.UserService;
 import com.example.playlistmanager.utils.ValidationUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -18,9 +18,9 @@ public class RejestracjaPanel extends BaseController {
     @FXML
     private TextField mailTextField;
     @FXML
-    private PasswordField hasloTextField;
+    private TextField hasloTextField;
     @FXML
-    private PasswordField potwierdzonehasloTextField;
+    private TextField potwierdzonehasloTextField;
     @FXML
     private Button zarejestrujButton;
     @FXML
@@ -36,39 +36,33 @@ public class RejestracjaPanel extends BaseController {
         String password = hasloTextField.getText();
         String confirmPassword = potwierdzonehasloTextField.getText();
 
-        // Validate inputs
-        if (name == null || name.isBlank()) {
-            showErrorDialog("Imię nie może być puste.");
-            return;
-        }
-        if (!ValidationUtils.isEmailValid(email)) {
-            showErrorDialog("Nieprawidłowy format e-maila.");
-            return;
-        }
-        if (!ValidationUtils.isPasswordValid(password)) {
-            showErrorDialog("Hasło nie spełnia wymagań.");
-            return;
-        }
-        if (!password.equals(confirmPassword)) {
-            showErrorDialog("Hasła nie są identyczne.");
-            return;
-        }
-
         try {
-            // Register the user
+            if (name == null || name.isBlank()) {
+                throw new NameException();
+            }
+            if (!ValidationUtils.isEmailValid(email)) {
+                throw new InvalidEmailException();
+            }
+            if (!ValidationUtils.isPasswordValid(password)) {
+                throw new InvalidPasswordException();
+            }
+            if (!password.equals(confirmPassword)) {
+                throw new DifferentPasswordException();
+            }
+
             userService.registerUser(email, password, name);
 
-            // Automatically log in the user
             if (userService.authenticateUser(email, password)) {
                 showSuccessDialog("Rejestracja zakończona sukcesem.");
                 goToMainAppScreen();
             } else {
-                throw new RuntimeException("Automatyczne logowanie po rejestracji nie powiodło się.");
+                throw new RegistrationException();
             }
         } catch (Exception e) {
             showErrorDialog("Błąd rejestracji: " + e.getMessage());
         }
     }
+
 
     @FXML
     public void onAnulujButton() {

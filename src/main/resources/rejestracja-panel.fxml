@@ -19,10 +19,10 @@
         <TextField fx:id="mailTextField" promptText="Podaj swój e-mail" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
         <Label text="Hasło:" GridPane.rowIndex="2" />
-        <PasswordField fx:id="hasloTextField" promptText="Podaj hasło" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
         <Label text="Potwierdź hasło:" GridPane.rowIndex="3" />
-        <PasswordField fx:id="potwierdzonehasloTextField" promptText="Potwierdź hasło" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <TextField fx:id="hasloTextField" promptText="Podaj hasło:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <TextField fx:id="potwierdzonehasloTextField" promptText="Powtórz hasło:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
         <columnConstraints>
             <ColumnConstraints />

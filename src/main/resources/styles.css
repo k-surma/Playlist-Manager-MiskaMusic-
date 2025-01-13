@@ -1,9 +1,9 @@
 .menu-bar {
-    -fx-background-color: #B0E0E6; /* Tło MenuBar */
+    -fx-background-color: #FFC0CB; /* Tło MenuBar */
 }
 
 .menu-bar1 {
-    -fx-background-color: #00CED1; /* Tło MenuBar */
+    -fx-background-color: #FF69B4; /* Tło MenuBar */
 }
 
 .menu {
@@ -14,9 +14,10 @@
     -fx-text-fill: #198fd4; /* Kolor tekstu MenuItem */
 }
 
+/*
 .label-stylish {
     -fx-text-fill: #483D8B;
     -fx-font-size: 12px;
-    -fx-font-family: "Comic Sans MS";
+    -fx-font-family: "Bellota";
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0.5, 2, 2);
-}
+}*/

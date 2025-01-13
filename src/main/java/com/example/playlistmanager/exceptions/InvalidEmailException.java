@@ -2,6 +2,6 @@ package com.example.playlistmanager.exceptions;
 
 public class InvalidEmailException extends LoginException {
     public InvalidEmailException() {
-        super("Nieprawidłowy email.");
+        super("Nieprawidłowy email. Prosze spróbować ponownie.");
     }
 }

@@ -4,6 +4,7 @@ import com.example.playlistmanager.controllers.MainApp;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
+import com.example.playlistmanager.utils.URLViewer;
 
 public class JavaFXApplication extends Application {
     private MainApp mainApp;
@@ -24,6 +25,7 @@ public class JavaFXApplication extends Application {
     //zamyka kontekst przy zamykaniu aplikacji
     @Override
     public void stop() {
-        mainApp.getSpringContext().close();
+        //URLViewer.stopPlaylist(); // Dodaj to
+        mainApp.getSpringContext().close(); // Istniejąca linia
     }
 }

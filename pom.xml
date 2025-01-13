@@ -63,6 +63,16 @@
             <artifactId>hibernate-community-dialects</artifactId>
             <version>6.2.9.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>17.0.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>17.0.12</version>
+        </dependency>
 
     </dependencies>
 

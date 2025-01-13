@@ -5,6 +5,7 @@ import com.example.playlistmanager.models.Song;
 import com.example.playlistmanager.service.PlaylistService;
 import com.example.playlistmanager.service.SongService;
 import com.example.playlistmanager.service.UserService;
+import com.example.playlistmanager.utils.URLViewer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.net.URL;
 import java.util.List;
 
 @Controller
@@ -33,6 +35,8 @@ public class MainPanel extends BaseController {
     private Button usunpiosenkezplaylistyButton;
     @FXML
     private Button wylogujButton;
+    @FXML
+    private Button odtworzPlaylisteButton;
 
     @FXML
     private ComboBox<Playlist> playlistyComboBox; // Displays playlists
@@ -73,8 +77,19 @@ public class MainPanel extends BaseController {
                 // Avoid showing duplicate dialogs
             }
         });
+        listapiosenekListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Song selectedSong = listapiosenekListView.getSelectionModel().getSelectedItem();
+                if (selectedSong != null) {
+                    String videoUrl = selectedSong.getPath();
+                    // Otwieranie linku w przeglądarce
+                    URLViewer.openUrl(videoUrl);
+                } else {
+                    showError("Nie wybrano piosenki do odtworzenia.");
+                }
+            }
+        });
     }
-
 
 
     private void loadPlaylists() {
@@ -107,7 +122,6 @@ public class MainPanel extends BaseController {
     }
 
 
-
     @FXML
     private void onDodajPlaylisteButton() {
         TextInputDialog dialog = new TextInputDialog();
@@ -126,7 +140,6 @@ public class MainPanel extends BaseController {
             playlistyComboBox.setValue(playlist); // Wybierz nowo dodaną playlistę
         });
     }
-
 
     @FXML
     private void onUsunPlaylisteButton() {
@@ -174,7 +187,6 @@ public class MainPanel extends BaseController {
         }
     }
 
-
     @FXML
     private void onUsunPiosenkeZPlaylistyButton() {
         Playlist selectedPlaylist = playlistyComboBox.getValue();
@@ -185,6 +197,16 @@ public class MainPanel extends BaseController {
         } else {
             showError("Nie wybrano piosenki do usunięcia.");
         }
+    }
+    @FXML
+    private void onOdtworzPlaylisteButton() {
+        List<Song> songs = listapiosenekListView.getItems();
+        if (songs == null || songs.isEmpty()) {
+            showError("Brak piosenek w playliście.");
+            return;
+        }
+        //URLViewer.stopPlaylist(); // Zatrzymaj poprzednią playlistę
+        URLViewer.playPlaylist(songs);
     }
 
     @FXML

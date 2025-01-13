@@ -1,11 +1,14 @@
 package com.example.playlistmanager.controllers;
 //zarządzanie scenami w aplikacji
+import com.example.playlistmanager.utils.URLViewer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Component
 public class MainApp extends BaseController {
@@ -22,6 +25,7 @@ public class MainApp extends BaseController {
     //Ładuje nowy widok FXML, przypisuje do niego kontroler i ustawia go jako aktywny widok w danym oknie.
     public void changeScene(Stage stage, String fxmlPath) {
         try {
+            //URLViewer.stopPlaylist();
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             loader.setControllerFactory(springContext::getBean);
             Parent root = loader.load();
