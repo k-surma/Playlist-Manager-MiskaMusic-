@@ -25,7 +25,7 @@ public class JavaFXApplication extends Application {
     //zamyka kontekst przy zamykaniu aplikacji
     @Override
     public void stop() {
-        //URLViewer.stopPlaylist(); // Dodaj to
+        URLViewer.stopPlaylist(); // Dodaj to
         mainApp.getSpringContext().close(); // Istniejąca linia
     }
 }

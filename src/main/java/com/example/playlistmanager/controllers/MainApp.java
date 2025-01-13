@@ -25,7 +25,7 @@ public class MainApp extends BaseController {
     //Ładuje nowy widok FXML, przypisuje do niego kontroler i ustawia go jako aktywny widok w danym oknie.
     public void changeScene(Stage stage, String fxmlPath) {
         try {
-            //URLViewer.stopPlaylist();
+            URLViewer.stopPlaylist();
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             loader.setControllerFactory(springContext::getBean);
             Parent root = loader.load();

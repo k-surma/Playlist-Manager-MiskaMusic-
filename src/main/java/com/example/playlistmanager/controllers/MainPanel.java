@@ -81,6 +81,7 @@ public class MainPanel extends BaseController {
             if (event.getClickCount() == 2) {
                 Song selectedSong = listapiosenekListView.getSelectionModel().getSelectedItem();
                 if (selectedSong != null) {
+                    URLViewer.stopPlaylist();
                     String videoUrl = selectedSong.getPath();
                     // Otwieranie linku w przeglądarce
                     URLViewer.openUrl(videoUrl);
@@ -205,7 +206,7 @@ public class MainPanel extends BaseController {
             showError("Brak piosenek w playliście.");
             return;
         }
-        //URLViewer.stopPlaylist(); // Zatrzymaj poprzednią playlistę
+        URLViewer.stopPlaylist(); // Zatrzymaj poprzednią playlistę
         URLViewer.playPlaylist(songs);
     }
 
