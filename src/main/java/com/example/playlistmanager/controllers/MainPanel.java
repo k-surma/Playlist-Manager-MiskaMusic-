@@ -37,6 +37,8 @@ public class MainPanel extends BaseController {
     private Button wylogujButton;
     @FXML
     private Button odtworzPlaylisteButton;
+    @FXML
+    private Button zatrzymajButton;
 
     @FXML
     private ComboBox<Playlist> playlistyComboBox; // Displays playlists
@@ -104,6 +106,9 @@ public class MainPanel extends BaseController {
             System.err.println("Error loading playlists: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    public void stopPlaying(){
+        URLViewer.stopPlaylist();
     }
 
 
@@ -206,7 +211,6 @@ public class MainPanel extends BaseController {
             showError("Brak piosenek w playliście.");
             return;
         }
-        URLViewer.stopPlaylist(); // Zatrzymaj poprzednią playlistę
         URLViewer.playPlaylist(songs);
     }
 

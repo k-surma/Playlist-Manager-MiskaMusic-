@@ -157,6 +157,14 @@
                         <Button fx:id="odtworzPlaylisteButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#onOdtworzPlaylisteButton" text="Odtwórz playlistę" textAlignment="CENTER" />
                      </children>
                   </HBox>
+                  <Button fx:id="zatrzymajButton" alignment="CENTER" mnemonicParsing="false" onAction="#stopPlaying" text="Zatrzymaj odtwarzanie playlisty" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets left="5.0" top="7.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Button>
                </children>
             </VBox>
          </children>

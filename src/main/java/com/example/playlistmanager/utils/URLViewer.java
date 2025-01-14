@@ -84,7 +84,6 @@ public class URLViewer {
             }
             isPlaying = false;
             System.out.println("Playlista zakończona.");
-            closeCurrentBrowser();
         });
 
         playlistThread.setDaemon(true);
