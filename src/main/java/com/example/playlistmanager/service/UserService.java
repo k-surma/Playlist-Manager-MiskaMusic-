@@ -47,6 +47,8 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public User findUserByEmail(String email) {return userRepository.findByEmail(email);}
+
     public void logout() {
         loggedInUserId = null; // Clear the logged-in user ID
     }

@@ -13,6 +13,10 @@ public class SongService {
     @Autowired
     private SongRepository songRepository;
 
+    @Autowired
+    private PlaylistService playlistService;
+
+
     public void initializeDatabase(String playlistName) {
         songRepository.initializeDatabase(playlistName);
     }

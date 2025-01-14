@@ -49,7 +49,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="udostepnijButton" mnemonicParsing="false" text="Udostępnij playlistę" textFill="DARKSLATEBLUE">
+            <Button fx:id="udostepnijPlaylisteButton" mnemonicParsing="false" onAction="#onUdostepnijPlaylisteButton" text="Udostępnij playlistę" textFill="DARKSLATEBLUE">
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin>
@@ -60,7 +60,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="powiadomieniaButton" mnemonicParsing="false" onAction="#onPowiadomieniaButton" text="Powiadomienia" textAlignment="CENTER" textFill="DARKSLATEBLUE">
+            <Button mnemonicParsing="false" text="Powiadomienia" textAlignment="CENTER" textFill="DARKSLATEBLUE">
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin>

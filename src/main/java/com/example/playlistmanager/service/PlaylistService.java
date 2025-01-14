@@ -1,12 +1,14 @@
 package com.example.playlistmanager.service;
 
 import com.example.playlistmanager.models.Playlist;
+import com.example.playlistmanager.models.SharedPlaylist;
 import com.example.playlistmanager.repositories.PlaylistRepository;
 import com.example.playlistmanager.repositories.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,9 +21,24 @@ public class PlaylistService {
     private SongRepository songRepository;
 
     @Autowired
-    public PlaylistService(PlaylistRepository playlistRepository, SongRepository songRepository) {
+    private SharedPlaylistService sharedPlaylistService;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private UserService userService;
+
+
+    @Autowired
+    public PlaylistService(PlaylistRepository playlistRepository, SongRepository songRepository,
+                           SharedPlaylistService sharedPlaylistService, NotificationService notificationService,
+                           UserService userService) {
         this.playlistRepository = playlistRepository;
         this.songRepository = songRepository;
+        this.sharedPlaylistService = sharedPlaylistService;
+        this.notificationService = notificationService;
+        this.userService = userService;
 
         // Inicjalizuje bazę danych przy uruchomieniu serwisu
         playlistRepository.initializeDatabase();
@@ -52,6 +69,53 @@ public class PlaylistService {
         }
     }
 
+    // Nowa metoda do udostępniania playlist bez accessLevel
+    public void sharePlaylist(int playlistId, String recipientEmail) {
+        // Znajdź użytkownika odbiorcy po emailu
+        com.example.playlistmanager.models.User recipient = userService.findUserByEmail(recipientEmail);
+        if (recipient == null) {
+            throw new RuntimeException("Użytkownik z podanym emailem nie istnieje.");
+        }
 
+        // Utwórz wpis w shared_playlists
+        sharedPlaylistService.sharePlaylist(playlistId, recipient.getId().intValue());
+
+        // Utwórz wiadomość powiadomienia
+        String message = "Użytkownik " + userService.findUserById(userService.getLoggedInUserId()).getName()
+                + " udostępnił Ci playlistę.";
+
+        // Dodaj powiadomienie (bez accessLevel)
+        notificationService.addNotification(recipient.getId().intValue(),
+                userService.getLoggedInUserId().intValue(),
+                playlistId,
+                message);
+    }
+
+    // Dodana metoda do pobierania udostępnionych playlist dla użytkownika
+    public List<Playlist> getSharedPlaylistsForUser(int userId) {
+        List<SharedPlaylist> sharedPlaylists = sharedPlaylistService.getSharedPlaylistsForUser(userId);
+        List<Playlist> playlists = new ArrayList<>();
+
+        for (SharedPlaylist sharedPlaylist : sharedPlaylists) {
+            Playlist playlist = playlistRepository.findById(sharedPlaylist.getPlaylistId());
+            if (playlist != null) {
+                // Opcjonalnie możesz dodać informacje o poziomie dostępu do obiektu Playlist
+                // np. poprzez rozszerzenie modelu Playlist lub utworzenie specjalnego DTO
+                playlists.add(playlist);
+            }
+        }
+
+        return playlists;
+    }
+
+
+    public Playlist getPlaylistById(int playlistId) {
+        // Zakładam, że PlaylistRepository ma metodę findById
+        return playlistRepository.findById(playlistId);
+    }
+
+    public Playlist getPlaylistByName(String playlistName) {
+        return playlistRepository.findByName(playlistName);
+    }
 
 }

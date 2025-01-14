@@ -68,6 +68,47 @@ public class PlaylistRepository {
         return playlists;
     }
 
+    public Playlist findById(int playlistId) {
+        String sql = "SELECT * FROM playlists WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, playlistId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new Playlist(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("userId")
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find playlist by ID", e);
+        }
+        return null;
+    }
+
+    public Playlist findByName(String name) {
+        String sql = "SELECT * FROM playlists WHERE name = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return new Playlist(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("userId")
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find playlist by name", e);
+        }
+        return null;
+    }
+
+
+
+
     public void delete(int playlistId) {
         String sql = "DELETE FROM playlists WHERE id = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL);
