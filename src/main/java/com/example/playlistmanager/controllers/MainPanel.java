@@ -39,6 +39,8 @@ public class MainPanel extends BaseController {
     private Button odtworzPlaylisteButton;
     @FXML
     private Button zatrzymajButton;
+    @FXML
+    private Button powiadomieniaButton;
 
     @FXML
     private ComboBox<Playlist> playlistyComboBox; // Displays playlists
@@ -212,6 +214,11 @@ public class MainPanel extends BaseController {
             return;
         }
         URLViewer.playPlaylist(songs);
+    }
+
+    @FXML
+    public void onPowiadomieniaButton(){
+
     }
 
     @FXML
