@@ -47,4 +47,8 @@ public class PlaylistService {
             System.err.println("Playlist file not found: " + playlistFile.getAbsolutePath());
         }
     }
+
+    public Playlist getPlaylistById(int playlistId) {
+        return playlistRepository.findById(playlistId);
+    }
 }
