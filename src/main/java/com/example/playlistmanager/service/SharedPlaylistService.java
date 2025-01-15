@@ -28,35 +28,32 @@ public class SharedPlaylistService {
         this.playlistRepository = playlistRepository;
         this.notificationService = notificationService;
         this.userService = userService;
-
-// Inicjalizacja bazy danych
         this.sharedPlaylistRepository.initializeDatabase();
     }
 
-    // Udostępnianie playlisty
+
     public void sharePlaylist(int playlistId, String recipientEmail) {
-// Znajdź użytkownika odbiorcę po emailu
-        User recipient = userService.findUserByEmail(recipientEmail);
-        if (recipient == null) {
+        User target_user = userService.findUserByEmail(recipientEmail);
+        if (target_user == null) {
             throw new RuntimeException("Użytkownik z podanym emailem nie istnieje.");
         }
 
-// Utwórz wpis w shared_playlists
-        SharedPlaylist sharedPlaylist = new SharedPlaylist(0, playlistId, recipient.getId().intValue());
+        // tworzy wpis w shared_playlists
+        SharedPlaylist sharedPlaylist = new SharedPlaylist(0, playlistId, target_user.getId().intValue());
         sharedPlaylistRepository.save(sharedPlaylist);
 
-// Utwórz i wyślij powiadomienie
+        // tworzy i wysyła powiadomienie
         String message = "Użytkownik " + userService.findUserById(userService.getLoggedInUserId()).getName()
                 + " udostępnił Ci playlistę.";
         notificationService.addNotification(
-                recipient.getId().intValue(),
+                target_user.getId().intValue(),
                 userService.getLoggedInUserId().intValue(),
                 playlistId,
                 message
         );
     }
 
-    // Pobieranie udostępnionych playlist dla użytkownika
+    // pobieranie udostępnionych playlist dla użytkownika docelowego
     public List<Playlist> getSharedPlaylistsForUser(int userId) {
         List<SharedPlaylist> sharedPlaylists = sharedPlaylistRepository.findByUserId(userId);
         List<Playlist> playlists = new ArrayList<>();

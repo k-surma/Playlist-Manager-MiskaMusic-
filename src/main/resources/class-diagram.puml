@@ -1,0 +1,316 @@
+@startuml
+skinparam packageTitleBackgroundColor #DDDDDD
+skinparam packageBorderColor #999999
+skinparam shadowing false
+
+' Możesz ustawić orientację diagramu (układ top-down lub left-right)
+' left to right direction
+
+' Pakiet z kontrolerami
+package "com.example.playlistmanager.controllers" <<Frame>> {
+  abstract class BaseController {
+    - mainApp : MainApp
+    --
+    + setMainApp(MainApp) : void
+    + getMainApp() : MainApp
+    + closeStage(Stage) : void
+  }
+
+  class MainApp {
+    - springContext : ConfigurableApplicationContext
+    --
+    + setSpringContext(ConfigurableApplicationContext) : void
+    + changeScene(Stage, String) : void
+  }
+
+  class LoginPanel {
+    - mailTextField : TextField
+    - hasloTextField : TextField
+    - zalogujButton : Button
+    - anulujButton : Button
+    - zarejestrujButton : Button
+    - userService : UserService
+    --
+    + onZalogujButton() : void
+    + onZarejestrujButton() : void
+    + onAnulujButton() : void
+    + goToMainAppScreen() : void
+  }
+
+  class MainPanel {
+    - emailTextField : TextField
+    - nameTextField : TextField
+    - wylogujButton : Button
+    - playlistyComboBox : ComboBox<Playlist>
+    - listapiosenekListView : ListView<Song>
+    - userService : UserService
+    - playlistService : PlaylistService
+    - sharedPlaylistService : SharedPlaylistService
+    - songService : SongService
+    - notificationService : NotificationService
+    - loggedInUserId : Long
+    --
+    + initialize() : void
+    + stopPlaying() : void
+    + onDodajPlaylisteButton() : void
+    + onUsunPlaylisteButton() : void
+    + onDodajPiosenkePlaylistaButton() : void
+    + onUsunPiosenkeZPlaylistyButton() : void
+    + onOdtworzPlaylisteButton() : void
+    + onWylogujButton() : void
+    + onUdostepnijPlaylisteButton() : void
+    - loadNotifications() : void
+    - loadAllPlaylists() : void
+    - loadSongs() : void
+    - showError(String) : void
+    - showInfo(String) : void
+  }
+
+  class RejestracjaPanel {
+    - nameTextField : TextField
+    - mailTextField : TextField
+    - hasloTextField : TextField
+    - potwierdzonehasloTextField : TextField
+    - zarejestrujButton : Button
+    - anulujButton : Button
+    - userService : UserService
+    --
+    + onZarejestrujButton() : void
+    + onAnulujButton() : void
+    + goToMainAppScreen() : void
+  }
+
+  ' Dziedziczenie kontrolerów
+  LoginPanel --|> BaseController
+  MainPanel --|> BaseController
+  RejestracjaPanel --|> BaseController
+}
+
+' Pakiet z modelami
+package "com.example.playlistmanager.models" <<Frame>> {
+  class Notification {
+    - id : int
+    - userId : int
+    - senderId : int
+    - playlistId : int
+    - message : String
+    - status : String
+  }
+
+  class Playlist {
+    - id : int
+    - name : String
+    - userId : int
+    - songs : List<Song>
+    --
+    + toString() : String
+  }
+
+  class Song {
+    - id : int
+    - title : String
+    - artist : String
+    - path : String
+    --
+    + toString() : String
+  }
+
+  class SharedPlaylist {
+    - id : int
+    - playlistId : int
+    - sharedWithUserId : int
+  }
+
+  class User {
+    - id : Long
+    - email : String
+    - password : String
+    - name : String
+  }
+}
+
+' Pakiet z repozytoriami
+package "com.example.playlistmanager.repositories" <<Frame>> {
+  class NotificationRepository {
+    - DB_URL : String
+    --
+    + initializeDatabase() : void
+    + addNotification(Notification) : void
+    + getNotificationsForUser(int) : List<Notification>
+    + updateNotificationStatus(int, String) : void
+  }
+
+  class PlaylistRepository {
+    - DB_URL : String
+    --
+    + initializeDatabase() : void
+    + save(Playlist) : void
+    + findByUserId(int) : List<Playlist>
+    + findById(int) : Playlist
+    + delete(int) : void
+  }
+
+  class SharedPlaylistRepository {
+    - DB_URL : String
+    --
+    + initializeDatabase() : void
+    + save(SharedPlaylist) : void
+    + findByUserId(int) : List<SharedPlaylist>
+  }
+
+  class SongRepository {
+    + initializeDatabase(String) : void
+    + save(String, Song) : void
+    + findAll(String) : List<Song>
+    + delete(String, int) : void
+  }
+
+  class UserRepository {
+    - DB_URL : String
+    --
+    + initializeDatabase() : void
+    + save(User) : void
+    + findByEmail(String) : User
+    + findById(Long) : User
+  }
+}
+
+' Pakiet z serwisami
+package "com.example.playlistmanager.service" <<Frame>> {
+  class NotificationService {
+    - notificationRepository : NotificationRepository
+    --
+    + addNotification(int, int, int, String) : void
+    + getPendingNotificationsForUser(int) : List<Notification>
+    + updateNotificationStatus(int, String) : void
+  }
+
+  class PlaylistService {
+    - playlistRepository : PlaylistRepository
+    - songRepository : SongRepository
+    --
+    + createPlaylist(Playlist) : void
+    + getPlaylistsForUser(int) : List<Playlist>
+    + deletePlaylist(int, String) : void
+    + getPlaylistById(int) : Playlist
+  }
+
+  class SharedPlaylistService {
+    - sharedPlaylistRepository : SharedPlaylistRepository
+    - playlistRepository : PlaylistRepository
+    - notificationService : NotificationService
+    - userService : UserService
+    --
+    + sharePlaylist(int, String) : void
+    + getSharedPlaylistsForUser(int) : List<Playlist>
+  }
+
+  class SongService {
+    - songRepository : SongRepository
+    --
+    + addSongToPlaylist(String, Song) : void
+    + getSongsInPlaylist(String) : List<Song>
+    + deleteSongFromPlaylist(String, int) : void
+  }
+
+  class UserService {
+    - userRepository : UserRepository
+    - loggedInUserId : Long
+    --
+    + registerUser(String, String, String) : void
+    + authenticateUser(String, String) : boolean
+    + getLoggedInUserId() : Long
+    + findUserById(Long) : User
+    + findUserByEmail(String) : User
+    + logout() : void
+  }
+}
+
+' Pakiet z klasami uruchomieniowymi i narzędziami
+package "com.example.playlistmanager" <<Frame>> {
+  class JavaFXApplication {
+    - mainApp : MainApp
+    --
+    + init() : void
+    + start(Stage) : void
+    + stop() : void
+  }
+
+  class PlaylistManagerApplication {
+    + main(String[]) : void
+  }
+}
+
+package "com.example.playlistmanager.utils" <<Frame>> {
+  class URLViewer {
+    - currentBrowserProcess : Process
+    - isPlaying : boolean
+    - playlistThread : Thread
+    --
+    + openUrl(String) : void
+    + stopPlaylist() : void
+    + playPlaylist(List<Song>) : void
+  }
+
+  class ValidationUtils {
+    - EMAIL_REGEX : String
+    - PASSWORD_REGEX : String
+    --
+    + isEmailValid(String) : boolean
+    + isPasswordValid(String) : boolean
+  }
+}
+
+' Relacje między klasami (asocjacje, użycie, itd.)
+
+' Kontrolery -> MainApp
+BaseController --> MainApp : "has-a (protected)"
+
+' LoginPanel, MainPanel, RejestracjaPanel -> userService
+LoginPanel --> UserService : "uses"
+MainPanel --> UserService : "uses"
+RejestracjaPanel --> UserService : "uses"
+
+' MainPanel -> PlaylistService, SharedPlaylistService, SongService, NotificationService
+MainPanel --> PlaylistService : "uses"
+MainPanel --> SharedPlaylistService : "uses"
+MainPanel --> SongService : "uses"
+MainPanel --> NotificationService : "uses"
+
+' Serwisy -> Repozytoria
+NotificationService --> NotificationRepository : "has-a"
+PlaylistService --> PlaylistRepository : "has-a"
+PlaylistService --> SongRepository : "has-a"
+SharedPlaylistService --> SharedPlaylistRepository : "has-a"
+SharedPlaylistService --> PlaylistRepository : "has-a"
+SharedPlaylistService --> NotificationService : "uses"
+SharedPlaylistService --> UserService : "uses"
+SongService --> SongRepository : "has-a"
+UserService --> UserRepository : "has-a"
+
+' Repozytoria -> Modele (pośrednio, np. w metodach)
+NotificationRepository --> Notification
+PlaylistRepository --> Playlist
+SharedPlaylistRepository --> SharedPlaylist
+SongRepository --> Song
+UserRepository --> User
+
+' Relacja: Playlist -> Song (wewnątrz listy "songs")
+Playlist "1" o-- "*" Song : "contains"
+
+' SharedPlaylist -> Playlist (via playlistId)
+' SharedPlaylist -> User (via sharedWithUserId)
+SharedPlaylist -- Playlist
+SharedPlaylist -- User
+
+' Notification -> Playlist (via playlistId), -> User (via userId, senderId)
+Notification -- User
+Notification -- Playlist
+
+' MainApp -> BaseController (ustawianie w changeScene)
+MainApp o--> BaseController : "setController()"
+
+JavaFXApplication -> MainApp : "creates"
+PlaylistManagerApplication -> JavaFXApplication  : "runs"
+
+@enduml

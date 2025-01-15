@@ -2,9 +2,9 @@ package com.example.playlistmanager.models;
 
 public class Notification {
     private int id;
-    private int userId; // Odbiorca powiadomienia
-    private int senderId; // Nadawca powiadomienia
-    private int playlistId; // ID udostępnianej playlisty
+    private int userId; // odbiorca powiadomienia
+    private int senderId; // nadawca powiadomienia
+    private int playlistId;
     private String message;
     private String status; // PENDING, ACCEPTED, REJECTED
 
@@ -19,7 +19,6 @@ public class Notification {
         this.status = status;
     }
 
-    // Gettery i settery
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

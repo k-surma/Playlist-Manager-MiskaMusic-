@@ -1,0 +1,77 @@
+@startuml
+
+' Ustawienia wyglądu (opcjonalne)
+skinparam participantPadding 10
+skinparam boxPadding 10
+skinparam shadowing false
+
+actor User
+
+participant MainPanel
+participant UserService
+participant PlaylistService
+participant SongService
+participant SharedPlaylistService
+participant NotificationService
+
+participant UserRepository
+participant PlaylistRepository
+participant SongRepository
+participant SharedPlaylistRepository
+participant NotificationRepository
+
+' ---------------------------
+' 1. Logowanie użytkownika
+' ---------------------------
+User -> MainPanel: login(email, password)
+MainPanel -> UserService: authenticateUser(email, password)
+UserService -> UserRepository: findByEmail(email)
+UserRepository --> UserService: returns User (if exists)
+UserService --> MainPanel: user authenticated (loggedInUserId set)
+MainPanel --> User: login success
+
+' ---------------------------
+' 2. Tworzenie playlisty
+' ---------------------------
+User -> MainPanel: createPlaylist("MyPlaylist")
+MainPanel -> PlaylistService: createPlaylist("MyPlaylist", userId)
+PlaylistService -> PlaylistRepository: save(playlist)
+PlaylistRepository --> PlaylistService: playlist saved
+PlaylistService -> SongRepository: initializeDatabase("MyPlaylist")
+SongRepository --> PlaylistService: database created/exists
+PlaylistService --> MainPanel: playlist created
+MainPanel --> User: playlist created (success)
+
+' ---------------------------
+' 3. Dodawanie piosenki
+' ---------------------------
+User -> MainPanel: addSongToPlaylist("MyPlaylist", "SongTitle")
+MainPanel -> SongService: addSongToPlaylist("MyPlaylist", song)
+SongService -> SongRepository: save("MyPlaylist", song)
+SongRepository --> SongService: song saved
+SongService --> MainPanel: success
+MainPanel --> User: song added success
+
+' ---------------------------
+' 4. Udostępnianie playlisty
+' ---------------------------
+User -> MainPanel: sharePlaylist("MyPlaylist", targetUserEmail)
+MainPanel -> SharedPlaylistService: sharePlaylist(playlistId, targetUserEmail)
+
+' Sprawdzenie czy odbiorca istnieje
+SharedPlaylistService -> UserService: findUserByEmail(targetUserEmail)
+UserService -> UserRepository: findByEmail(targetUserEmail)
+UserRepository --> UserService: returns target User
+
+' Zapis do shared_playlists
+SharedPlaylistService -> SharedPlaylistRepository: save(SharedPlaylist)
+
+' Wysłanie powiadomienia
+SharedPlaylistService -> NotificationService: addNotification(targetUserId, senderId, playlistId, message)
+NotificationService -> NotificationRepository: addNotification(notification)
+NotificationRepository --> NotificationService: notification created
+
+SharedPlaylistService --> MainPanel: share success
+MainPanel --> User: playlist shared successfully
+
+@enduml

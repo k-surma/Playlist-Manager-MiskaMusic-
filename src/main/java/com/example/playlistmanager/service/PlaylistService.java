@@ -23,22 +23,21 @@ public class PlaylistService {
         this.playlistRepository = playlistRepository;
         this.songRepository = songRepository;
 
-// Inicjalizuje bazę danych przy uruchomieniu serwisu
         playlistRepository.initializeDatabase();
     }
 
     public void createPlaylist(Playlist playlist) {
-        playlistRepository.save(playlist); // Zapisuje playlistę w playlists.db
-        songRepository.initializeDatabase(playlist.getName()); // Inicjalizuje bazę danych dla playlisty
+        playlistRepository.save(playlist);
+        songRepository.initializeDatabase(playlist.getName());
         System.out.println("Zainicjalizowano bazę danych dla playlisty: " + playlist.getName());
     }
 
     public List<Playlist> getPlaylistsForUser(int userId) {
-        return playlistRepository.findByUserId(userId); // Retrieve playlists for the user
+        return playlistRepository.findByUserId(userId);
     }
 
     public void deletePlaylist(int playlistId, String playlistName) {
-        playlistRepository.delete(playlistId); // Remove from playlists.db
+        playlistRepository.delete(playlistId);
         File playlistFile = new File(playlistName + ".db");
         if (playlistFile.exists() && playlistFile.isFile()) {
             if (!playlistFile.delete()) {
@@ -47,9 +46,5 @@ public class PlaylistService {
         } else {
             System.err.println("Playlist file not found: " + playlistFile.getAbsolutePath());
         }
-    }
-
-    public Playlist getPlaylistById(int playlistId) {
-        return playlistRepository.findById(playlistId);
     }
 }
