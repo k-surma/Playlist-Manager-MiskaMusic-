@@ -15,6 +15,7 @@ public class JavaFXApplication extends Application {
         mainApp = new MainApp();
         mainApp.setSpringContext(SpringApplication.run(PlaylistManagerApplication.class));
     }
+
     //ustawia początkową scenę (widok) na ekran logowania
     @Override
     public void start(Stage stage) throws Exception {
@@ -22,10 +23,11 @@ public class JavaFXApplication extends Application {
         stage.setTitle("Playlist Manager");
         stage.show();
     }
+
     //zamyka kontekst przy zamykaniu aplikacji
     @Override
     public void stop() {
-        URLViewer.stopPlaylist(); // Dodaj to
-        mainApp.getSpringContext().close(); // Istniejąca linia
+        URLViewer.stopPlaylist();
+        mainApp.getSpringContext().close();
     }
 }

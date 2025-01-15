@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-    private Long loggedInUserId; // ID of the currently logged-in user
+    private Long loggedInUserId;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -17,20 +17,20 @@ public class UserService {
 
     public void registerUser(String email, String password, String name) {
         if (email == null || email.isBlank() || password == null || password.isBlank() || name == null || name.isBlank()) {
-            throw new RuntimeException("Email, password, and name must not be empty.");
+            throw new RuntimeException("Email, hasło i imię nie mogą być puste.");
         }
         if (userRepository.findByEmail(email) != null) {
-            throw new RuntimeException("User already exists.");
+            throw new RuntimeException("Użytkownik już istnieje.");
         }
         User user = new User(email, password);
-        user.setName(name); // Set the name
+        user.setName(name);
         userRepository.save(user);
     }
 
     public boolean authenticateUser(String email, String password) {
         User user = userRepository.findByEmail(email);
         if (user != null && user.getPassword().equals(password)) {
-            loggedInUserId = user.getId(); // Set the logged-in user ID
+            loggedInUserId = user.getId();
             return true;
         }
         return false;
@@ -38,7 +38,7 @@ public class UserService {
 
     public Long getLoggedInUserId() {
         if (loggedInUserId == null) {
-            throw new RuntimeException("No user is currently logged in.");
+            throw new RuntimeException("Nie wybrano zalogowanego żadnego użytkownika.");
         }
         return loggedInUserId;
     }
@@ -50,6 +50,6 @@ public class UserService {
     public User findUserByEmail(String email) {return userRepository.findByEmail(email);}
 
     public void logout() {
-        loggedInUserId = null; // Clear the logged-in user ID
+        loggedInUserId = null;
     }
 }

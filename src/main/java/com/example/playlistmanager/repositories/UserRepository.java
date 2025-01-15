@@ -11,7 +11,6 @@ public class UserRepository {
 
     public void initializeDatabase() {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
-            // Create the table if it does not exist
             String createTableSql = """
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,7 +22,6 @@ public class UserRepository {
                 stmt.execute(createTableSql);
             }
 
-            // Check if the "name" column exists, and add it if it does not
             String checkColumnSql = "PRAGMA table_info(users);";
             boolean hasNameColumn = false;
 
@@ -48,7 +46,6 @@ public class UserRepository {
             throw new RuntimeException("Failed to initialize database", e);
         }
     }
-
 
     public void save(User user) {
         String sql = "INSERT INTO users (email, password, name) VALUES (?, ?, ?)";
@@ -83,7 +80,6 @@ public class UserRepository {
         }
     }
 
-    // Add the missing findById method
     public User findById(Long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL);

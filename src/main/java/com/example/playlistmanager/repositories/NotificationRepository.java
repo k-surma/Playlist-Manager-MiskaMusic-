@@ -34,14 +34,14 @@ public class NotificationRepository {
                 System.out.println("Tabela notifications została utworzona (lub już istnieje).");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to initialize notifications database", e);
+            throw new RuntimeException("Nie udało się zainicjalizować bazy danych do powiadomień.", e);
         }
     }
 
     public void addNotification(Notification notification) {
         String sql = "INSERT INTO notifications (userId, senderId, playlistId, message, status) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, notification.getUserId());
             pstmt.setInt(2, notification.getSenderId());
             pstmt.setInt(3, notification.getPlaylistId());
@@ -49,11 +49,11 @@ public class NotificationRepository {
             pstmt.setString(5, notification.getStatus());
             pstmt.executeUpdate();
 
-            ResultSet generatedKeys = pstmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                notification.setId(generatedKeys.getInt(1));
-            } else {
-                throw new SQLException("Creating notification failed, no ID obtained.");
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid()")) {
+                if (rs.next()) {
+                    notification.setId(rs.getInt(1));
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to add notification", e);
@@ -76,12 +76,11 @@ public class NotificationRepository {
                 notification.setPlaylistId(rs.getInt("playlistId"));
                 notification.setMessage(rs.getString("message"));
                 notification.setStatus(rs.getString("status"));
-                // Usunięto ustawianie accessLevel
                 notifications.add(notification);
             }
         } catch (SQLException e) {
             System.err.println("Error executing query: " + e.getMessage());
-            throw new RuntimeException("Failed to retrieve notifications", e);
+            throw new RuntimeException("Nie udało się pobrać powiadomień.", e);
         }
         return notifications;
     }
@@ -94,18 +93,8 @@ public class NotificationRepository {
             pstmt.setInt(2, notificationId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to update notification status", e);
+            throw new RuntimeException("Nie udało się zaktualizować statusu powiadomienia.", e);
         }
     }
 
-    public void removeNotification(int notificationId) {
-        String sql = "DELETE FROM notifications WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, notificationId);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to remove notification", e);
-        }
-    }
 }

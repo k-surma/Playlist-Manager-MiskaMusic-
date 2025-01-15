@@ -60,14 +60,6 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button mnemonicParsing="false" text="Powiadomienia" textAlignment="CENTER" textFill="DARKSLATEBLUE">
-               <VBox.margin>
-                  <Insets top="15.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="Comic Sans MS Bold" size="12.0" />
-               </font>
-            </Button>
             <Button fx:id="wylogujButton" mnemonicParsing="false" onAction="#onWylogujButton" text="Wyloguj" textFill="DARKSLATEBLUE">
                <font>
                   <Font name="Comic Sans MS Bold" size="12.0" />

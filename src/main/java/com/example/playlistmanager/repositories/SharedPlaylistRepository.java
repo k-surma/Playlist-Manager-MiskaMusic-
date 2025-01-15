@@ -63,15 +63,4 @@ public class SharedPlaylistRepository {
         }
         return sharedPlaylists;
     }
-
-    public void delete(int sharedPlaylistId) {
-        String sql = "DELETE FROM shared_playlists WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, sharedPlaylistId);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete shared playlist", e);
-        }
-    }
 }

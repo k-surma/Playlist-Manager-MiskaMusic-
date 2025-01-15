@@ -15,8 +15,6 @@ public class PlaylistRepository {
     public void initializeDatabase() {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             System.out.println("Połączono z bazą danych playlists.db.");
-
-            // Tworzy tabelę "playlists" tylko jeśli jeszcze nie istnieje
             String sql = """
             CREATE TABLE IF NOT EXISTS playlists (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +28,7 @@ public class PlaylistRepository {
             }
         } catch (SQLException e) {
             System.err.println("Błąd inicjalizacji bazy danych playlists.db: " + e.getMessage());
-            throw new RuntimeException("Failed to initialize playlists database", e);
+            throw new RuntimeException("Nie udało się zainicjalizować bazy danych playlist.", e);
         }
     }
 
@@ -63,7 +61,7 @@ public class PlaylistRepository {
                 playlists.add(playlist);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to retrieve playlists", e);
+            throw new RuntimeException("Nie udało się załadować playlisty.", e);
         }
         return playlists;
     }
@@ -82,32 +80,10 @@ public class PlaylistRepository {
                 );
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to find playlist by ID", e);
+            throw new RuntimeException("Nie znaleziono playlisty po ID.", e);
         }
         return null;
     }
-
-    public Playlist findByName(String name) {
-        String sql = "SELECT * FROM playlists WHERE name = ?";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, name);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return new Playlist(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getInt("userId")
-                );
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to find playlist by name", e);
-        }
-        return null;
-    }
-
-
-
 
     public void delete(int playlistId) {
         String sql = "DELETE FROM playlists WHERE id = ?";
@@ -116,7 +92,7 @@ public class PlaylistRepository {
             pstmt.setInt(1, playlistId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete playlist", e);
+            throw new RuntimeException("Nie udało się usunąć playlisty.", e);
         }
     }
 }

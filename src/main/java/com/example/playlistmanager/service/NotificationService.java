@@ -18,7 +18,6 @@ public class NotificationService {
         this.notificationRepository.initializeDatabase();
     }
 
-    // Usunięto parametr accessLevel
     public void addNotification(int userId, int senderId, int playlistId, String message) {
         Notification notification = new Notification(0, userId, senderId, playlistId, message, "PENDING");
         notificationRepository.addNotification(notification);

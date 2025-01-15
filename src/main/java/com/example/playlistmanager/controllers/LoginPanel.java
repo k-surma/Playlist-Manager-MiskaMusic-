@@ -46,6 +46,7 @@ public class LoginPanel extends BaseController {
             if (userService.authenticateUser(mail, haslo)) {
                 System.out.println("Zalogowano pomyślnie.");
                 goToMainAppScreen();
+
             } else {
                 throw new AuthenticationFailedException();
             }

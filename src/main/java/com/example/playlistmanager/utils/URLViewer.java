@@ -1,20 +1,17 @@
 package com.example.playlistmanager.utils;
 import com.example.playlistmanager.models.Song;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.io.IOException;
 
 public class URLViewer {
     private static Process currentBrowserProcess = null;
     private static volatile boolean isPlaying = false;
-    private static Thread playlistThread = null;
+    private static Thread playlistThread = null; // wątek, który działą w tle; odpowiedzialny za odtwarzanie playlisty
 
     public static void openUrl(String url) {
         try {
-            // Najpierw zamknij poprzedni proces przeglądarki
             closeCurrentBrowser();
 
-            // Utwórz nowy proces przeglądarki
             ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "start", "chrome", url);
             currentBrowserProcess = pb.start();
 
@@ -27,13 +24,13 @@ public class URLViewer {
     private static void closeCurrentBrowser() {
         if (currentBrowserProcess != null) {
             try {
-                // Zamknij poprzednią kartę
+                // /F - wymusza zamknięcie procesu, /T - zamyka proces główny i wszystkie potomne, /IM - zamyka plik exe procesu
                 ProcessBuilder taskkill = new ProcessBuilder("taskkill", "/F", "/IM", "chrome.exe", "/T");
                 Process killProcess = taskkill.start();
-                killProcess.waitFor(); // Poczekaj na zakończenie procesu zamykania
+                killProcess.waitFor(); // czeka na zakończenie procesu zamykania
                 currentBrowserProcess.destroy();
                 currentBrowserProcess = null;
-                Thread.sleep(1000); // Krótka pauza dla pewności
+                Thread.sleep(1000); // krótka pauza dla pewności
             } catch (Exception e) {
                 System.err.println("Błąd podczas zamykania przeglądarki: " + e.getMessage());
             }
@@ -55,7 +52,6 @@ public class URLViewer {
             return;
         }
 
-        // Zatrzymaj aktualnie odtwarzaną playlistę
         stopPlaylist();
         isPlaying = true;
 
@@ -70,9 +66,9 @@ public class URLViewer {
                         System.out.println("Odtwarzanie: " + song.getTitle());
                         openUrl(videoUrl);
 
-                        // Czekaj określony czas przed następnym utworem
+                        // 3 minuty między utworami
                         for (int i = 0; i < 180 && isPlaying; i++) {
-                            Thread.sleep(1000); // Czekaj po sekundzie, żeby móc szybciej przerwać
+                            Thread.sleep(1000);
                         }
                     }
                 } catch (InterruptedException e) {
@@ -86,7 +82,8 @@ public class URLViewer {
             System.out.println("Playlista zakończona.");
         });
 
-        playlistThread.setDaemon(true);
+        playlistThread.setDaemon(true); // pozwala na dalszą pracę głównego programu (zapobiega blokowaniu do skończenia wątku)
         playlistThread.start();
     }
+
 }

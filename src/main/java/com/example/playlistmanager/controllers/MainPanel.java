@@ -3,11 +3,9 @@ package com.example.playlistmanager.controllers;
 import com.example.playlistmanager.models.Notification;
 import com.example.playlistmanager.models.Playlist;
 import com.example.playlistmanager.models.Song;
-import com.example.playlistmanager.service.NotificationService;
-import com.example.playlistmanager.service.PlaylistService;
-import com.example.playlistmanager.service.SongService;
-import com.example.playlistmanager.service.UserService;
+import com.example.playlistmanager.service.*;
 import com.example.playlistmanager.utils.URLViewer;
+import com.example.playlistmanager.utils.ValidationUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -23,31 +21,17 @@ import java.util.List;
 public class MainPanel extends BaseController {
 
     @FXML
-    private TextField emailTextField; // Displays user's email
+    private TextField emailTextField;
     @FXML
-    private TextField nameTextField;  // Displays user's name
+    private TextField nameTextField;
 
-    @FXML
-    private Button dodajplaylisteButton;
-    @FXML
-    private Button usunplaylisteButton;
-    @FXML
-    private Button dodajpiosenkeplaylistaButton;
-    @FXML
-    private Button usunpiosenkezplaylistyButton;
     @FXML
     private Button wylogujButton;
-    @FXML
-    private Button odtworzPlaylisteButton;
-    @FXML
-    private Button zatrzymajButton;
-    @FXML
-    private Button udostepnijPlaylisteButton; // Nowy przycisk do udostępniania playlisty
 
     @FXML
-    private ComboBox<Playlist> playlistyComboBox; // Displays playlists
+    private ComboBox<Playlist> playlistyComboBox;
     @FXML
-    private ListView<Song> listapiosenekListView; // Displays songs in a playlist
+    private ListView<Song> listapiosenekListView;
 
     @Autowired
     private UserService userService;
@@ -56,12 +40,15 @@ public class MainPanel extends BaseController {
     private PlaylistService playlistService;
 
     @Autowired
+    private SharedPlaylistService sharedPlaylistService;
+
+    @Autowired
     private SongService songService;
 
     @Autowired
     private NotificationService notificationService;
 
-    private Long loggedInUserId; // ID of the currently logged-in user
+    private Long loggedInUserId;
 
     @FXML
     private void initialize() {
@@ -71,19 +58,18 @@ public class MainPanel extends BaseController {
                 var loggedInUser = userService.findUserById(loggedInUserId);
 
                 if (loggedInUser == null) {
-                    System.err.println("Logged-in user data not found.");
+                    System.err.println("Nie znaleziono zalogowanego użytkownika!");
                     return;
                 }
 
                 emailTextField.setText(loggedInUser.getEmail());
                 nameTextField.setText(loggedInUser.getName());
 
-                loadPlaylists();
-                loadSharedPlaylists();
+                loadAllPlaylists();
                 loadNotifications();
                 playlistyComboBox.setOnAction(event -> loadSongs());
             } catch (RuntimeException e) {
-                System.err.println("Error during MainPanel initialization: " + e.getMessage());
+                System.err.println("Błąd przy inicjalizacji MainPanel: " + e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -94,7 +80,6 @@ public class MainPanel extends BaseController {
                 if (selectedSong != null) {
                     URLViewer.stopPlaylist();
                     String videoUrl = selectedSong.getPath();
-                    // Otwieranie linku w przeglądarce
                     URLViewer.openUrl(videoUrl);
                 } else {
                     showError("Nie wybrano piosenki do odtworzenia.");
@@ -103,27 +88,24 @@ public class MainPanel extends BaseController {
         });
     }
 
-    private void loadPlaylists() {
+    private void loadAllPlaylists() {
         try {
-            List<Playlist> playlists = playlistService.getPlaylistsForUser(loggedInUserId.intValue());
-            if (playlists == null || playlists.isEmpty()) {
-                System.out.println("No playlists found for the user.");
-            }
-            playlistyComboBox.setItems(FXCollections.observableArrayList(playlists));
-        } catch (Exception e) {
-            System.err.println("Error loading playlists: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+            List<Playlist> userPlaylists = playlistService.getPlaylistsForUser(loggedInUserId.intValue());
+            List<Playlist> sharedPlaylists = sharedPlaylistService.getSharedPlaylistsForUser(loggedInUserId.intValue());
 
-    private void loadSharedPlaylists() {
-        try {
-            List<Playlist> sharedPlaylists = playlistService.getSharedPlaylistsForUser(loggedInUserId.intValue());
+            if (userPlaylists != null && !userPlaylists.isEmpty()) {
+                playlistyComboBox.getItems().addAll(userPlaylists);
+            }
+
             if (sharedPlaylists != null && !sharedPlaylists.isEmpty()) {
-                playlistyComboBox.getItems().addAll(sharedPlaylists);
+                for (Playlist sharedPlaylist : sharedPlaylists) {
+                    if (!playlistyComboBox.getItems().contains(sharedPlaylist)) {
+                        playlistyComboBox.getItems().add(sharedPlaylist);
+                    }
+                }
             }
         } catch (Exception e) {
-            System.err.println("Error loading shared playlists: " + e.getMessage());
+            System.err.println("Błąd przy załadowaniu playlist: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -139,7 +121,7 @@ public class MainPanel extends BaseController {
             List<Song> songs = songService.getSongsInPlaylist(selectedPlaylist.getName());
             listapiosenekListView.setItems(FXCollections.observableArrayList(songs));
         } catch (Exception e) {
-            System.err.println("Error loading songs: " + e.getMessage());
+            System.err.println("Błąd przy załadowywaniu piosenek: " + e.getMessage());
         }
     }
 
@@ -161,8 +143,8 @@ public class MainPanel extends BaseController {
             }
             Playlist playlist = new Playlist(0, name, loggedInUserId.intValue());
             playlistService.createPlaylist(playlist);
-            loadPlaylists(); // Odśwież listę playlist
-            playlistyComboBox.setValue(playlist); // Wybierz nowo dodaną playlistę
+            loadAllPlaylists();
+            playlistyComboBox.setValue(playlist);
         });
     }
 
@@ -175,7 +157,7 @@ public class MainPanel extends BaseController {
             confirm.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.YES) {
                     playlistService.deletePlaylist(selectedPlaylist.getId(), selectedPlaylist.getName());
-                    loadPlaylists();
+                    loadAllPlaylists();
                     listapiosenekListView.getItems().clear();
                 }
             });
@@ -248,7 +230,6 @@ public class MainPanel extends BaseController {
             return;
         }
 
-        // Dialog do wprowadzenia emaila odbiorcy
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Udostępnij Playlistę");
         dialog.setHeaderText("Udostępnianie playlisty: " + selectedPlaylist.getName());
@@ -256,7 +237,7 @@ public class MainPanel extends BaseController {
         ButtonType udostepnijButtonType = new ButtonType("Udostępnij", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(udostepnijButtonType, ButtonType.CANCEL);
 
-        // Ustawienie zawartości dialogu
+        // ustawienie zawartości dialogu
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -269,7 +250,7 @@ public class MainPanel extends BaseController {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Konwertowanie wyniku dialogu na email
+        // konwertowanie wyniku dialogu na email
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == udostepnijButtonType) {
                 return emailField.getText();
@@ -277,14 +258,13 @@ public class MainPanel extends BaseController {
             return null;
         });
 
-        dialog.showAndWait().ifPresent(recipientEmail -> {
-            // Walidacja adresu email
-            if (recipientEmail.isBlank() || !recipientEmail.contains("@")) {
+        dialog.showAndWait().ifPresent(userEmail -> {
+            if (userEmail.isBlank() || !ValidationUtils.isEmailValid(userEmail)) {
                 showError("Proszę podać prawidłowy adres email.");
                 return;
             }
 
-            playlistService.sharePlaylist(selectedPlaylist.getId(), recipientEmail);
+            sharedPlaylistService.sharePlaylist(selectedPlaylist.getId(), userEmail);
             showInfo("Playlista została udostępniona.");
 
         });
@@ -306,11 +286,10 @@ public class MainPanel extends BaseController {
 
                 alert.showAndWait().ifPresent(response -> {
                     if (response == acceptButton) {
-                        // Dodaj playlistę do ComboBox jako współdzieloną
-                        Playlist sharedPlaylist = playlistService.getPlaylistById(notification.getPlaylistId());
-                        if (sharedPlaylist != null) {
-                            playlistyComboBox.getItems().add(sharedPlaylist);
-                        }
+//                        Playlist sharedPlaylist = playlistService.getPlaylistById(notification.getPlaylistId());
+//                        if (sharedPlaylist != null) {
+//                            playlistyComboBox.getItems().add(sharedPlaylist);
+//                        }
                         notificationService.updateNotificationStatus(notification.getId(), "ACCEPTED");
                         showInfo("Playlista została dodana do Twoich playlist.");
                     } else if (response == rejectButton) {

@@ -8,11 +8,9 @@ import javafx.stage.Stage;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Component
-public class MainApp extends BaseController {
-    private ConfigurableApplicationContext springContext; //przechowuje kontekst aby móc zarządzać zależnościami
+public class MainApp {
+    private ConfigurableApplicationContext springContext; //przechowuje kontekst, aby móc zarządzać zależnościami
 
     public ConfigurableApplicationContext getSpringContext() {
         return springContext;
@@ -22,7 +20,7 @@ public class MainApp extends BaseController {
         this.springContext = context;
     }
 
-    //Ładuje nowy widok FXML, przypisuje do niego kontroler i ustawia go jako aktywny widok w danym oknie.
+    // ładuje nowy widok FXML, przypisuje do niego kontroler i ustawia go jako aktywny widok w danym oknie
     public void changeScene(Stage stage, String fxmlPath) {
         try {
             URLViewer.stopPlaylist();

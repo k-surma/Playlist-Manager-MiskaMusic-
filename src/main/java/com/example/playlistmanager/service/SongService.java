@@ -13,14 +13,6 @@ public class SongService {
     @Autowired
     private SongRepository songRepository;
 
-    @Autowired
-    private PlaylistService playlistService;
-
-
-    public void initializeDatabase(String playlistName) {
-        songRepository.initializeDatabase(playlistName);
-    }
-
     public void addSongToPlaylist(String playlistName, Song song) {
         if (song.getTitle() == null || song.getTitle().isBlank() ||
                 song.getArtist() == null || song.getArtist().isBlank() ||
@@ -29,7 +21,6 @@ public class SongService {
         }
         songRepository.save(playlistName, song);
     }
-
 
     public List<Song> getSongsInPlaylist(String playlistName) {
         return songRepository.findAll(playlistName);
